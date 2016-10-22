@@ -1,0 +1,76 @@
+#!/usr/bin/env node
+var http = require("http")
+var fs = require("fs")
+var Url = require('url')
+var exec = require('child_process').exec;
+var argv = require('yargs').argv;
+var markdown = require('markdown').markdown;
+
+if(argv.init || argv.i){
+  console.log("说明：")
+  console.log("simpleServer i 或者 simpleServer init 可开启服务器")
+  console.log("----cd 到需要开启服务器的目录----")
+  console.log("----输入simpleServer，开启服务器----")
+  console.log("使用simpleServer ")
+}else{
+  var server = http.createServer(function(request,response){
+    var path = Url.parse(request.url).pathname;
+    if(!argv.f){
+      if(path[path.length - 1] === "/"){
+        path += "index.html"
+      }else{
+        path += "/index.html"
+      }
+    }
+    path = path.substr(1);
+    if(fs.existsSync(path)){
+      fs.readFile(path,function(error,content){
+        if(error){
+          response.writeHead(500);
+          response.end();
+        }else{
+          var contentStr = content.toString();
+          if(/\.md$/.test(path)){
+          content = markdown.toHTML(contentStr);
+            var c;
+            fs.readFile("./style.css",function(e,c){
+              c = c.toString();
+              content = '<style>' + c + '</style>' + content;
+              response.writeHead(200,{'Content-Type':'text/html'});
+              response.write(content);
+              response.end();
+            });
+          }else{
+            response.writeHead(200);
+            response.write(content);
+            response.end();
+          }
+        }
+      })
+    }else{
+      response.writeHead(404);
+      response.end();
+    }
+  })
+
+  server.listen(1234);
+  if(argv.f){
+    var url = 'http://127.0.0.1:1234/' + argv.f;
+  }else{
+    var url = 'http://127.0.0.1:1234/'
+  }
+
+  switch(process.platform){
+    case "darwin":
+      exec('open ' + url);
+      break;
+    case 'win32':
+      exec('start ' + url);
+      break;
+    default:
+      exec('xdg-open ',[url]);
+  }
+  console.log("服务器运行在 http://127.0.0.1:1234")
+}
+
+
