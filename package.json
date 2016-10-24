@@ -1,15 +1,16 @@
 {
   "name": "mark-server",
-  "version": "1.0.0",
+  "version": "0.9.1",
   "description": "A server base on Nodejs",
   "main": "index.js",
   "bin": {
     "mark": "./bin/server"
   },
-  "dependencies": {},
+  "dependencies": {
+    "yargs": "^6.2.0",
+    "marked": "^0.3.6"
+  },
   "devDependencies": {
-    "marked": "^0.3.6",
-    "yargs": "^6.2.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
