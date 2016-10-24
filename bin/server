@@ -4,14 +4,14 @@ var fs = require("fs")
 var Url = require('url')
 var exec = require('child_process').exec;
 var argv = require('yargs').argv;
-var markdown = require('markdown').markdown;
+var marked = require("marked");
 
 if(argv.init || argv.i){
   console.log("说明：")
-  console.log("simpleServer i 或者 simpleServer init 可开启服务器")
-  console.log("----cd 到需要开启服务器的目录----")
-  console.log("----输入simpleServer，开启服务器----")
-  console.log("使用simpleServer ")
+  console.log('切换到需要开启服务器的文件夹下')
+  console.log("mark即可开启静态服务器，默认打开当前目录下的index.html")
+  console.log("使用 mark --f=filename 即可将该文件设为默认打开文件")
+  console.log("将filename换做markdown文件即可实现Markdown文件的预览 ")
 }else{
   var server = http.createServer(function(request,response){
     var path = Url.parse(request.url).pathname;
@@ -20,6 +20,7 @@ if(argv.init || argv.i){
         path += "index.html"
       }
     }
+    path = decodeURI(path);
     path = path.substr(1);
     if(fs.existsSync(path)){
       fs.readFile(path,function(error,content){
@@ -29,7 +30,7 @@ if(argv.init || argv.i){
         }else{
           if(/\.md$/.test(path)){
             var contentStr = content.toString();
-            var c = markdown.toHTML(contentStr);
+            var c = marked(contentStr);
             c = '<meta charset="utf-8">' +
             '<style>' +
             'body {margin: 24px;font: 14px "微软雅黑", "Lucida Grande",' +
@@ -40,13 +41,14 @@ if(argv.init || argv.i){
             '.quote {background-color: #e8e8e8;border-left' +
             ': 5px solid #cacaca;padding: 3px 0 3px 24px;' +
             'border-radius: 3px; margin: 0;}' +
+            'img {display:block;text-align:center}' +
             'code {background-color: #e8e8e8;' +
-            'border-left: 5px solid #cacaca;padding: 3px 0 3px 24px;' +
+            'border-left: 10px solid #cacaca;padding: 3px 0 3px 24px;' +
             'border-radius: 3px;margin: 0;font-family:' +
             'Consolas, Monaco, "Lucida Console", monospace;' +
             'padding: 0 5px;margin-left: 2px;margin-right: 2px;' +
             'border: 1px solid #cacaca;}' +
-            'code p {margin: 1px 0;}pre {' +
+            'code p {margin: 1px 0;display:block;}pre {' +
             'background-color: #e8e8e8;' +
             "border-left: 5px solid #cacaca;" +
             'padding: 3px 0 3px 24px;' +
@@ -54,7 +56,7 @@ if(argv.init || argv.i){
             'margin: 0;border-left-width: 32px;' +
             'padding-left: 12px;}' +
             'pre p {margin: 1px 0;}' +
-            'pre code {border: 0;padding: 0;margin: 0;}' +
+            'pre code {border: 0;padding: 0;margin: 10px 0;}' +
             'blockquote {background-color: #e8e8e8;' +
             'border-left: 5px solid #cacaca;' +
             'padding: 3px 0 3px 24px;' +
@@ -67,7 +69,7 @@ if(argv.init || argv.i){
             'a:hover {color: #000;}' +
             'ul,ol {margin: 0;padding: 0;}' +
             'ul li,ol li {margin-left: 1.2em;padding: 0;}' +
-            'ul li {list-style-type: square;}' +
+            'ul li {list-style-type: square;}p {text-indent: 2rem;}' +
             'hr {height: 1px;border: 0;background-color: #999;}' +
             '</style>' + c;
             response.writeHead(200,{'Content-Type':'text/html'});
