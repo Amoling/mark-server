@@ -41,7 +41,7 @@ mark --i
 mark --init
 ```
 
-~~#### Personalise style~~
+#### ~~Personalise style~~
 
 ~~change the style.css what you want.~~
 
