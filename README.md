@@ -41,10 +41,10 @@ mark --i
 mark --init
 ```
 
-~#### Personalise style~
+~~#### Personalise style~~
 
 ```JavaScript
-~change the style.css what you want.~
+~~change the style.css what you want.~~
 ```
 
 ### Enjoy
