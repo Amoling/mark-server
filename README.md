@@ -45,6 +45,6 @@ mark --init
 
 ~~```JavaScript
 change the style.css what you want.
-```~~
+```
 
 ### Enjoy
