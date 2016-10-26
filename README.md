@@ -43,8 +43,8 @@ mark --init
 
 ~~#### Personalise style~~
 
-```JavaScript
-~~change the style.css what you want.~~
-```
+~~```JavaScript
+change the style.css what you want.
+```~~
 
 ### Enjoy
